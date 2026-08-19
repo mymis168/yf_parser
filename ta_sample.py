@@ -1,6 +1,8 @@
 import ta
 import yfinance as yf
 from pprint import pp, pprint
+import matplotlib.pyplot as plt
+
 
 #ta 產出指標前需要準備 OCHLV 資料
 symbol = "2330.TW"  # 台積電股票代碼
@@ -17,4 +19,18 @@ print(type(sma_obj))
 #呼叫 sma_indicator 才是真正計算五日均值的工作
 data['SMA5'] = sma_obj.sma_indicator()
 print(f"五日趨勢: {data['SMA5']}")
+
+
+#繪製 布林軌道線圖
+bb = ta.volatility.BollingerBands(data['Close'], window=5, window_dev=2)
+data['bb_mband'] = bb.bollinger_mavg()  #中
+data['bb_hband'] = bb.bollinger_hband() #上
+data['bb_lband'] = bb.bollinger_lband() #下
+
+
+data[['Close','bb_hband','bb_mband','bb_lband']].plot(figsize=(12, 6))
+plt.title('Bollinger Band for TSMC')
+plt.ylabel('value') # 設定 y軸資料名稱
+plt.show()   # 將圖表顯示出來
+
 
