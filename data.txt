@@ -1,0 +1,15 @@
+import yfinance as yf
+from pprint import pprint
+
+symbol = "2330.TW"  # Apple Inc. 股票代碼
+ticker = yf.Ticker(symbol)
+
+df = ticker.history(period="1y")  # 取得過去一年的歷史股價數據
+df['returns'] = df['Close'].pct_change()  # 計算每日報酬率
+
+# 計算年化報酬率
+annual_return = (1 + df['returns'].mean()) ** 252 - 1
+pprint(f"Annual Return: {annual_return:.2%}")
+
+df['dividends'] = ticker.dividends  # 取得股息資料
+print(f"Dividends: {df['dividends'].sum()}")
